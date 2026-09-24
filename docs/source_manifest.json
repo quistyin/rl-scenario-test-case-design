@@ -1,0 +1,279 @@
+{
+  "origin": "Final 2026-09-20 risk-design experiment; final 2026-09-22 statistical audit",
+  "source_code": [
+    {
+      "file": "experiment/magent2_experiment/__init__.py",
+      "source_relative": "magent2_experiment/__init__.py",
+      "sha256": "7092d26227fc80cb87d2009eab7dac6cc5082b14e8cc4aec3b1ea600117f9e7c",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/coverage_metrics.py",
+      "source_relative": "magent2_experiment/coverage_metrics.py",
+      "sha256": "c92d4a26899c4af909939a1c18dc0e17a017bca98e59e4af8f924056a3982034",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/coverage_model.py",
+      "source_relative": "magent2_experiment/coverage_model.py",
+      "sha256": "9ca6b0c8f9109112acfc868d790ac0ecd0cce7fe5e2d629e66fd8979767f9e9b",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/faults.py",
+      "source_relative": "magent2_experiment/faults.py",
+      "sha256": "9d91453f7bd5c034bef0f0fc2bec19a1cc59614718363ddf4627c741a8fa07cd",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/generators.py",
+      "source_relative": "magent2_experiment/generators.py",
+      "sha256": "49965d75b04ef16764289ee9110922aa8e3c992d71d82bd777af2c095a92abf7",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/path_faults.py",
+      "source_relative": "magent2_experiment/path_faults.py",
+      "sha256": "37c0e2e0ac1a709d5f643d0a4464bc164e897bb5c796ffd99d1e0d9ba5198ad7",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/path_model.py",
+      "source_relative": "magent2_experiment/path_model.py",
+      "sha256": "f0f751989fcc1f3e08ec7f81e46295f56b0f773329d8c459dae00e5795eb4f71",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/path_runner.py",
+      "source_relative": "magent2_experiment/path_runner.py",
+      "sha256": "e1207f52cf26d37f5b2c1b6b24138d150ae102f79adc721bf30f85732097d354",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/policy.py",
+      "source_relative": "magent2_experiment/policy.py",
+      "sha256": "f7dd12396a6eb92198bd5743cbd265bbf9c756b09cb92c3fc2bedb783039114a",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/risk_catalog.py",
+      "source_relative": "magent2_experiment/risk_catalog.py",
+      "sha256": "0f9ee72466297b181b03bf59d388029a00f1cfa8078b4e35536eae85d1eadf61",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/risk_runner.py",
+      "source_relative": "magent2_experiment/risk_runner.py",
+      "sha256": "5a4c43be3ee144117b726395f31d04b1b5dcc1d06aba698a6b39bdc5203d7d7c",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/runner.py",
+      "source_relative": "magent2_experiment/runner.py",
+      "sha256": "be9e40f6fce6ac7f3e57fc9d6f24b0d9b68d6fc12239fa04851b9b2447be5817",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/scenario_config.py",
+      "source_relative": "magent2_experiment/scenario_config.py",
+      "sha256": "831b811aa892ef1d87e795407646e0e13b65ad96a30600f48a9084abe30e20b1",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/scenario_environment.py",
+      "source_relative": "magent2_experiment/scenario_environment.py",
+      "sha256": "6c680c330889971f1d7559b6b52bd6bc32546cf1665696176228bb8bef01b9d4",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/scenario_geometry.py",
+      "source_relative": "magent2_experiment/scenario_geometry.py",
+      "sha256": "9305946876169258145fd367774d1892940387bf3fa6660bc0bbd4bf57140098",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/scenario_monitor.py",
+      "source_relative": "magent2_experiment/scenario_monitor.py",
+      "sha256": "7a3fd6da7c8ef2cffbc8711b1ac74c3d3fb152b5de2194474ebc1c49068e7b8f",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/scenario_runner.py",
+      "source_relative": "magent2_experiment/scenario_runner.py",
+      "sha256": "e3f94e2e0f86cac0632e41fcfa9f27d60abfef2c04360a75e59417ac642988ba",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/tests/test_coverage_metrics.py",
+      "source_relative": "magent2_experiment/tests/test_coverage_metrics.py",
+      "sha256": "81f2e3844630367daa926fe4ef26f095d893370c3f32dddea236e5e24fd7426c",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/tests/test_coverage_model.py",
+      "source_relative": "magent2_experiment/tests/test_coverage_model.py",
+      "sha256": "37e5b33823afacf364de4030fa596b566304669fa0a3456e22d551e96300e03f",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/tests/test_scenario_geometry.py",
+      "source_relative": "magent2_experiment/tests/test_scenario_geometry.py",
+      "sha256": "764f577779c39f6fa6577490f072814037efc1c49e1e9e929dd264c2f79e68fc",
+      "modified": false
+    },
+    {
+      "file": "experiment/magent2_experiment/tests/test_scenario_monitor.py",
+      "source_relative": "magent2_experiment/tests/test_scenario_monitor.py",
+      "sha256": "e6ee992e89506f68bbf1eb83d918ecc379a4cb55eae5c6ebbd0244c9b0a28e03",
+      "modified": false
+    },
+    {
+      "file": "experiment/scripts/analyze_design.py",
+      "source_relative": "scripts/analyze_design.py",
+      "sha256": "9ddc58b70c6b2f5ea80792f529aec8afc65d11c674a594ba0dd7026d228cdea6",
+      "modified": false
+    },
+    {
+      "file": "experiment/scripts/environment_probe.py",
+      "source_relative": "scripts/environment_probe.py",
+      "sha256": "ed5c07233a2827fa078b2603ba497f6c5df120d4815704880d2cc0f32a199d43",
+      "modified": false
+    },
+    {
+      "file": "experiment/scripts/result_diagnostics.py",
+      "source_relative": "scripts/result_diagnostics.py",
+      "sha256": "e5b937b76d23ad0d4b072aa0f4efa930adc0fe68ddcb6add4e22f7199119fba6",
+      "modified": false
+    },
+    {
+      "file": "experiment/scripts/reward_correction.py",
+      "source_relative": "scripts/reward_correction.py",
+      "sha256": "cb035deeb50ad0534c803ab9125277ad0d71541d52c4362ffab1fb6a206ff4a6",
+      "modified": false
+    },
+    {
+      "file": "experiment/scripts/risk_design.py",
+      "source_relative": "scripts/risk_design.py",
+      "sha256": "e6a0afb52a8b6440a71d31c08f6b01a390daffe36fe841b1c393535021cf7669",
+      "modified": false
+    },
+    {
+      "file": "experiment/scripts/run_frozen.py",
+      "source_relative": "scripts/run_frozen.py",
+      "sha256": "5c39d4f34e8e948df670ecf27ed40cc7eec7914f19a2b4b28a01e3d0a6a23995",
+      "modified": false
+    },
+    {
+      "file": "experiment/scripts/supplementary_audit.py",
+      "source_relative": "scripts/supplementary_audit.py",
+      "sha256": "5e339df404d42d2f2da19fbc75e4226618194bb86ebe4662535391183dfebd91",
+      "modified": false
+    },
+    {
+      "file": "experiment/scripts/verify_design.py",
+      "source_relative": "scripts/verify_design.py",
+      "sha256": "1ed58d2259be715283f4a60d195c9a8c59761aa60d5d0ff596328fcf746427f4",
+      "modified": false
+    },
+    {
+      "file": "experiment/vendor/allpairspy/__init__.py",
+      "source_relative": "vendor/allpairspy/__init__.py",
+      "sha256": "2b856e1729ab8f506fa593acd6ace552fb70f59b36e7446eba50839f8b61cdc3",
+      "modified": false
+    },
+    {
+      "file": "experiment/vendor/allpairspy/__version__.py",
+      "source_relative": "vendor/allpairspy/__version__.py",
+      "sha256": "2de0d9c934494d19d99a81aa18815af5721af4d3936a6af828456755fc28cfad",
+      "modified": false
+    },
+    {
+      "file": "experiment/vendor/allpairspy/allpairs.py",
+      "source_relative": "vendor/allpairspy/allpairs.py",
+      "sha256": "65e4b49e02325af2d91c0801b8b86adb640efc366e7ed007287ed44970072b0e",
+      "modified": false
+    },
+    {
+      "file": "experiment/vendor/allpairspy/pairs_storage.py",
+      "source_relative": "vendor/allpairspy/pairs_storage.py",
+      "sha256": "7c879f43f21548c4a052cd7c3633cd1dc05305fd82aeefeb3438fd7a2b3459c6",
+      "modified": false
+    },
+    {
+      "file": "experiment/vendor/allpairspy-2.5.1.dist-info/INSTALLER",
+      "source_relative": "vendor/allpairspy-2.5.1.dist-info/INSTALLER",
+      "sha256": "ceebae7b8927a3227e5303cf5e0f1f7b34bb542ad7250ac03fbcde36ec2f1508",
+      "modified": false
+    },
+    {
+      "file": "experiment/vendor/allpairspy-2.5.1.dist-info/LICENSE.txt",
+      "source_relative": "vendor/allpairspy-2.5.1.dist-info/LICENSE.txt",
+      "sha256": "d2a48441d47e5e4e5b068030c6ae09475ff39777c54aa3c5742abf90db61b5d4",
+      "modified": false
+    },
+    {
+      "file": "experiment/vendor/allpairspy-2.5.1.dist-info/METADATA",
+      "source_relative": "vendor/allpairspy-2.5.1.dist-info/METADATA",
+      "sha256": "f4368fbdab93c930bf846e4d14422efbb2cf8ec22e94513dd8f3ca6ba1dcca82",
+      "modified": false
+    },
+    {
+      "file": "experiment/vendor/allpairspy-2.5.1.dist-info/RECORD",
+      "source_relative": "vendor/allpairspy-2.5.1.dist-info/RECORD",
+      "sha256": "53de2e280802f43c3f9bf3d3bbd1fb36022cb6fefac5ceb86a3dde920ddf521b",
+      "modified": false
+    },
+    {
+      "file": "experiment/vendor/allpairspy-2.5.1.dist-info/REQUESTED",
+      "source_relative": "vendor/allpairspy-2.5.1.dist-info/REQUESTED",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "modified": false
+    },
+    {
+      "file": "experiment/vendor/allpairspy-2.5.1.dist-info/top_level.txt",
+      "source_relative": "vendor/allpairspy-2.5.1.dist-info/top_level.txt",
+      "sha256": "dc0df06159c32fa8aa13d81308bf573d961468cfd146d5ff3c31531b06e27901",
+      "modified": false
+    },
+    {
+      "file": "experiment/vendor/allpairspy-2.5.1.dist-info/WHEEL",
+      "source_relative": "vendor/allpairspy-2.5.1.dist-info/WHEEL",
+      "sha256": "a6472d658cd44b8018567e9d27eef7ebb389662bc5d9ef1103d6ff6418e27f5f",
+      "modified": false
+    }
+  ],
+  "source_metrics": [
+    {
+      "source_relative": "results/analysis/suite_metrics.json",
+      "sha256": "baecaccc5ae25c2842b80437eb70b0d5df6ae88d9d1ea2d34f2614bfa630169f",
+      "selection": "batch=main; method=random, combination, risk"
+    },
+    {
+      "source_relative": "results/reward_correction/suite_metrics.json",
+      "sha256": "1f636cf2ed33b1e881c2f66be50c685dac4a03fcd8df9c67b2d801575399fcf1",
+      "selection": "all 300 corrected-reward combination summaries"
+    }
+  ],
+  "statistical_audit_sha256": "3669ee34fbec06a06147ac75f19708bb14be5ea47c98978271a8d7c2da7a6ccd",
+  "summary_fields": [
+    "method",
+    "design",
+    "model",
+    "seed",
+    "sc",
+    "kpc",
+    "auc",
+    "complete",
+    "tfc",
+    "paths"
+  ],
+  "excluded": [
+    "per-step traces",
+    "episode records",
+    "weights",
+    "calibration records",
+    "case-level history identifiers",
+    "earlier baseline results",
+    "internal review documents"
+  ]
+}

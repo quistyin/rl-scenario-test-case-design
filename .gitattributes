@@ -1,0 +1,2 @@
+# Keep the published checksum manifest stable across Windows checkouts.
+* -text
