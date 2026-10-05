@@ -1,0 +1,54 @@
+{
+  "verbatim_files": [
+    {
+      "file": "artifacts/models/seed_11.pt",
+      "source_relative": "models/seed_11.pt",
+      "sha256": "4925e24e8c85ef39dcf0fffb86956c63575bd502b67eff988fb8686650a0a857",
+      "modified": false
+    },
+    {
+      "file": "artifacts/models/seed_22.pt",
+      "source_relative": "models/seed_22.pt",
+      "sha256": "507189aec0c5e6913e5e7bad959bdc03e4b1532077529e6093fe6659f0c62222",
+      "modified": false
+    },
+    {
+      "file": "artifacts/models/seed_33.pt",
+      "source_relative": "models/seed_33.pt",
+      "sha256": "4c9481f053d8e54a3e3388cfaf4aabe223a38836c6f8eaeb0ba92363592c90b7",
+      "modified": false
+    },
+    {
+      "file": "artifacts/history/catalog.json",
+      "source_relative": "history/catalog.json",
+      "sha256": "a312316ae4f1ccad9627ca25f433fecb5d6656159db9f58dbfdb2214539e33a5",
+      "modified": false
+    },
+    {
+      "file": "artifacts/history/screen.jsonl",
+      "source_relative": "history/screen.jsonl",
+      "sha256": "be6c0c151c34700bca0cbea723aa89a004e6d19f4c2410f0a7002e07d2969d06",
+      "modified": false
+    },
+    {
+      "file": "artifacts/history/refine.jsonl",
+      "source_relative": "history/refine.jsonl",
+      "sha256": "7ed27c02115430a42bda2f6eb943b3ab85df42e7426a24c6e49b9127e036b9bc",
+      "modified": false
+    },
+    {
+      "file": "artifacts/provenance/original_frozen.json",
+      "source_relative": "results/frozen.json",
+      "sha256": "e4e899a24a7d8c9d4be9e02dff67b2f24e4b73d75823027ffb7070b55ae6e287",
+      "modified": false
+    },
+    {
+      "file": "artifacts/provenance/reward_corrected_frozen.json",
+      "source_relative": "results/reward_correction/frozen.json",
+      "sha256": "caa7e8011c160b444b4da9d966dac6a00eb1cbeb6f838847b2314d5d15217663",
+      "modified": false
+    }
+  ],
+  "record_selection": "Original JSONL lines selected by final catalog IDs; trace members are byte-identical.",
+  "original_frozen_exclusions": "Historical paper-building scripts, internal plan and unrelated batches are not released. Original freeze is provenance, not the public run manifest."
+}

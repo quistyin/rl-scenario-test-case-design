@@ -1,0 +1,7 @@
+numpy==1.26.4
+torch==2.5.1
+magent2==0.3.4
+pettingzoo==1.27.0
+gymnasium==1.3.0
+scipy==1.14.1
+pygame-ce==2.5.8

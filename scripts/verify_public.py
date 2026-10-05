@@ -6,14 +6,16 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import gzip
+import zipfile
 
 from reproduce import validate_rows, table_rows, statistics_report, compare_reference
 
 ROOT = Path(__file__).resolve().parents[1]
 IGNORED = {'.git', '.venv', 'venv', '__pycache__', '.pytest_cache', 'generated'}
-PRIVATE_SUFFIXES = {'.doc', '.docx', '.pt', '.pth', '.ckpt', '.pem', '.key', '.gz', '.jsonl'}
+PRIVATE_SUFFIXES = {'.doc', '.docx', '.pt', '.pth', '.ckpt', '.pem', '.key', '.gz', '.zip', '.jsonl'}
 PRIVATE_PARTS = {'local_archive', 'models', 'history', 'traces', 'raw', 'logs', 'pip-cache'}
-TEXT_SUFFIXES = {'.py', '.json', '.csv', '.md', '.txt'}
+TEXT_SUFFIXES = {'.py', '.json', '.jsonl', '.csv', '.md', '.txt'}
 
 
 def digest(path):
@@ -38,16 +40,35 @@ def scan(paths):
                 r'/home/[A-Za-z0-9_.-]+/', r'gh[pousr]_[A-Za-z0-9]{20,}',
                 r'github_pat_[A-Za-z0-9_]{30,}', r'AKIA[A-Z0-9]{16}',
                 r'-----BEGIN (?:RSA |OPENSSH )?PRIVATE KEY-----']
+    release_path = ROOT / 'data/release_manifest.json'
+    released = json.loads(release_path.read_text(encoding='utf-8'))['files'] if release_path.exists() else {}
+    def inspect_text(text, name):
+        if any(re.search(pattern, text) for pattern in patterns):
+            raise ValueError(f'Possible local path or credential: {name}')
     for path in paths:
         relative = path.relative_to(ROOT)
-        if path.suffix.lower() in PRIVATE_SUFFIXES or set(relative.parts) & PRIVATE_PARTS:
+        name = relative.as_posix()
+        approved = name in released and name.startswith('artifacts/')
+        if approved and digest(path) != released[name]:
+            raise ValueError(f'Approved artifact hash mismatch: {name}')
+        if not approved and (path.suffix.lower() in PRIVATE_SUFFIXES or set(relative.parts) & PRIVATE_PARTS):
             raise ValueError(f'Nonpublic file in package: {relative}')
         if path.name.startswith('.env') or path.stat().st_size >= 25 * 1024 * 1024:
             raise ValueError(f'Unexpected environment file or large file: {relative}')
         if path.suffix.lower() in TEXT_SUFFIXES:
-            text = path.read_text(encoding='utf-8')
-            if any(re.search(pattern, text) for pattern in patterns):
-                raise ValueError(f'Possible local path or credential: {relative}')
+            inspect_text(path.read_text(encoding='utf-8'), relative)
+        elif approved and path.suffix == '.gz':
+            with gzip.open(path, 'rt', encoding='utf-8') as handle:
+                for line in handle:
+                    inspect_text(line, relative)
+        elif approved and path.suffix == '.zip':
+            from replay_experiment import safe_member
+            with zipfile.ZipFile(path) as archive:
+                for member in archive.namelist():
+                    safe_member(member)
+                    if not member.endswith('.json.gz'):
+                        raise ValueError('Unexpected trace archive member')
+                    inspect_text(gzip.decompress(archive.read(member)).decode('utf-8'), member)
     provenance = json.loads((ROOT / 'docs/source_manifest.json').read_text(encoding='utf-8'))
     for item in provenance['source_code']:
         if digest(ROOT / item['file']) != item['sha256']:
@@ -79,7 +100,7 @@ def main():
     print(json.dumps({'status': 'passed', 'files': len(paths),
                       'bytes': sum(path.stat().st_size for path in paths),
                       'combinations': len(rows), 'methods': 4, 'paired_comparisons': 12,
-                      'private_file_and_pattern_scan': 'passed',
+                      'nonpublic_file_and_pattern_scan': 'passed',
                       'source_hashes': 'unchanged', 'simulations_run': 0}, ensure_ascii=False))
 
 

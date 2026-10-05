@@ -25,3 +25,6 @@ __pycache__/
 *.pth
 *.ckpt
 /local_archive/
+!/artifacts/models/seed_11.pt
+!/artifacts/models/seed_22.pt
+!/artifacts/models/seed_33.pt
