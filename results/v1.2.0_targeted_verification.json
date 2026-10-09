@@ -1,0 +1,14 @@
+{
+  "scope": "First episode in the published sorted P4 correction list; fixed before execution",
+  "simulations_run": 1,
+  "candidate_id": "N0051",
+  "model_seed": 11,
+  "environment_seed": 172920004,
+  "archived_covered_paths": [
+    "P4"
+  ],
+  "covered_paths": [],
+  "terminal_only_m2": true,
+  "coverage_rule": "strict-p4-no-m2-including-terminal-v1",
+  "differences": 0
+}

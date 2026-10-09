@@ -1,0 +1,11 @@
+{
+  "recorded_episodes_checked": 24180,
+  "combinations": 1200,
+  "logical_case_references": 36000,
+  "coverage_and_statistics": "passed",
+  "coverage_rule": "strict-p4-no-m2-including-terminal-v1",
+  "corrected_unique_episodes": 125,
+  "original_order_combinations_changed": 0,
+  "simulations_run": 0,
+  "scope": "Recorded labels and phase sequences, not all original observations."
+}

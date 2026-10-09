@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 from concurrent.futures import ProcessPoolExecutor
 import gzip
+from fractions import Fraction
 import hashlib
 import io
 import json
@@ -18,6 +20,8 @@ ART = ROOT / 'artifacts'
 sys.path[:0] = [str(ROOT / 'experiment'), str(ROOT / 'experiment/scripts')]
 from magent2_experiment.coverage_model import ALLOWED_TRANSITIONS, KEY_PATHS, _VariantTracker
 from reproduce import validate_rows, table_rows, statistics_report, compare_reference
+
+COVERAGE_RULE = 'strict-p4-no-m2-including-terminal-v1'
 
 
 def read(path):
@@ -48,12 +52,71 @@ def integrity():
 
 
 def replay_paths(trace, terminal):
+    """Historical phase-only matcher, retained to audit immutable cached records."""
     trackers = [_VariantTracker(pid, i, v) for pid, variants in KEY_PATHS.items() for i, v in enumerate(variants)]
     for i, state in enumerate(trace):
         legal = i == 0 or state == trace[i - 1] or (trace[i - 1], state) in ALLOWED_TRANSITIONS
         for tracker in trackers:
             tracker.observe(state, legal, terminal if i == len(trace) - 1 else None)
     return {t.path_id for t in trackers if t.covered}
+
+
+def strict_replay_paths(trace, terminal, flags):
+    known = {f'M{i}' for i in range(9)}
+    if (not isinstance(trace, list) or not trace or
+            not isinstance(flags, list) or len(flags) != len(trace)):
+        raise ValueError('Every phase requires recorded state flags, including the terminal step')
+    for state, frame in zip(trace, flags):
+        if (state not in known or not isinstance(frame, list) or not frame or
+                any(not isinstance(s, str) or s not in known for s in frame)):
+            raise ValueError('Invalid phase or state flags')
+    paths = replay_paths(trace, terminal)
+    if any('M2' in frame for frame in flags):
+        paths.discard('P4')
+    return paths
+
+
+def evaluate_episode(raw):
+    paths = strict_replay_paths(raw['state_trace'], raw['test_case']['terminal_tag'], raw['state_flags'])
+    return {**raw, 'archived_covered_paths': list(raw['covered_paths']),
+            'covered_states': sorted(set().union(*map(set, raw['state_flags']))),
+            'covered_paths': sorted(paths), 'coverage_rule': COVERAGE_RULE}
+
+
+def reordering_report(index, plan, orders):
+    budgets = {len(s['ids']) for s in plan['suites']}
+    if len(budgets) != 1 or not orders:
+        raise ValueError('Reordering requires equal nonempty budgets and permutations')
+    budget = budgets.pop()
+    for order in orders:
+        if (not budget or any(type(i) is not int for i in order) or
+                sorted(order) != list(range(budget))):
+            raise ValueError('Invalid permutation')
+    bits = {p: 1 << i for i, p in enumerate(sorted(KEY_PATHS))}
+    sums, counts = {}, Counter()
+    for suite in plan['suites']:
+        method = suite['method']
+        totals = sums.setdefault(method, [0] * len(orders))
+        for model in plan['policies']:
+            for seed in plan['environment_seeds']:
+                masks = [sum(bits[p] for p in set(index[(c, model, seed)]['covered_paths']))
+                         for c in suite['ids']]
+                counts[method] += 1
+                for j, order in enumerate(orders):
+                    union = 0
+                    for position in order:
+                        union |= masks[position]
+                        totals[j] += union.bit_count()
+    methods = {}
+    for method, totals in sums.items():
+        denominator = counts[method] * budget * len(KEY_PATHS)
+        exact = Fraction(sum(totals), denominator * len(orders))
+        methods[method] = {'combinations': counts[method], 'mean_auc': float(exact),
+                           'mean_auc_fraction': str(exact),
+                           'permutation_means': [n / denominator for n in totals],
+                           'path_count_sums': totals, 'permutation_denominator': denominator}
+    return {'coverage_rule': COVERAGE_RULE, 'permutations': len(orders),
+            'budget': budget, 'methods': methods, 'simulations_run': 0}
 
 
 def coverage_row(episodes, method, design, model, seed):
@@ -115,6 +178,8 @@ def verify_records(output):
     if set(index) != expected:
         raise ValueError('Missing or extra episode in grid')
     archives = [zipfile.ZipFile(ART / p) for p in plan['trace_archives']]
+    corrections = []
+    original_p4 = strict_p4 = 0
     try:
         members = {}
         for archive in archives:
@@ -142,19 +207,54 @@ def verify_records(output):
                 raise ValueError(f'State recount mismatch: {key}')
             if paths != set(row['covered_paths']) or paths != set(raw['covered_paths']):
                 raise ValueError(f'Path recount mismatch: {key}')
-            # Aggregate recalculated sets, not the cached coverage fields.
-            row['covered_states'], row['covered_paths'] = sorted(states), sorted(paths)
+            corrected = evaluate_episode(raw)
+            original_p4 += 'P4' in paths
+            strict_p4 += 'P4' in corrected['covered_paths']
+            if paths != set(corrected['covered_paths']):
+                corrections.append({'candidate_id': key[0], 'model_seed': key[1],
+                                    'environment_seed': key[2], 'trace_file': name,
+                                    'trace_sha256': row['trace_sha256'],
+                                    'archived_covered_paths': sorted(paths),
+                                    'covered_paths': corrected['covered_paths'],
+                                    'm2_steps_zero_based': [i for i, f in enumerate(raw['state_flags']) if 'M2' in f],
+                                    'terminal_step_zero_based': len(raw['state_flags']) - 1})
+            # Both replay and fresh execution use the same corrected evaluator.
+            row['covered_states'], row['covered_paths'] = sorted(states), corrected['covered_paths']
+            row['coverage_rule'] = COVERAGE_RULE
     finally:
         for archive in archives:
             archive.close()
     rows = combinations(index, plan)
     compare_combinations(rows)
+    correction_keys = {(r['candidate_id'], r['model_seed'], r['environment_seed']) for r in corrections}
+    references = Counter()
+    for suite in plan['suites']:
+        for model in plan['policies']:
+            for seed in plan['environment_seeds']:
+                references[suite['method']] += sum((c, model, seed) in correction_keys for c in suite['ids'])
+    correction_report = {'coverage_rule': COVERAGE_RULE, 'original_p4_episodes': original_p4,
+                         'strict_p4_episodes': strict_p4, 'corrected_unique_episodes': len(corrections),
+                         'affected_references_by_method': dict(references),
+                         'corrections': sorted(corrections, key=lambda r: (r['candidate_id'], r['model_seed'], r['environment_seed']))}
+    permutation_plan = read(ROOT / 'data/reordering_plan.json')
+    if (permutation_plan['zero_based'] is not True or len(permutation_plan['orders']) != 100):
+        raise ValueError('Expected 100 published zero-based permutations')
+    reordered = reordering_report(index, plan, permutation_plan['orders'])
+    if correction_report != read(ROOT / 'results/p4_corrections.json'):
+        raise ValueError('Strict P4 corrections differ from the published release')
+    if reordered != read(ROOT / 'results/reordering_summary.json'):
+        raise ValueError('Reordering results differ from the published release')
+    write(output / 'p4_corrections.json', correction_report)
+    write(output / 'reordering_summary.json', reordered)
     write(output / 'recounted_combinations.json', rows)
     report = {'recorded_episodes_checked': len(index), 'combinations': len(rows),
               'logical_case_references': 36000, 'coverage_and_statistics': 'passed',
+              'coverage_rule': COVERAGE_RULE, 'corrected_unique_episodes': len(corrections),
+              'original_order_combinations_changed': 0,
               'simulations_run': 0, 'scope': 'Recorded labels and phase sequences, not all original observations.'}
     write(output / 'record_verification.json', report)
     print(json.dumps(report))
+    return index
 
 
 def verify_design(output):
@@ -208,7 +308,7 @@ def execute_one(task):
         MODELS[model] = policy
     result = run_path_episode(MODELS[model], ScenarioConfig(**{**item['config'], 'environment_seed': seed})).to_dict()
     result.update(candidate_id=item['id'], model_seed=model, environment_seed=seed)
-    return result
+    return evaluate_episode(result)
 
 
 def rerun(output, full, workers):
@@ -223,7 +323,7 @@ def rerun(output, full, workers):
         seeds = plan['environment_seeds'][:1]
     tasks = [(config[c], m, s) for c in ids for m in plan['policies'] for s in seeds]
     output.mkdir(parents=True, exist_ok=False)
-    reference = recorded_rows()
+    reference = verify_records(output / 'reference_audit')
     differences, index = [], {}
     with ProcessPoolExecutor(max_workers=workers, initializer=initialize_worker) as executor:
         with (output / 'executed.jsonl').open('w', encoding='utf-8') as handle:

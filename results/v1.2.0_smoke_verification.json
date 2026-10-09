@@ -1,0 +1,10 @@
+{
+  "mode": "smoke",
+  "simulations_run": 114,
+  "differences": [],
+  "fresh_output": true,
+  "environment": {
+    "python": "3.11.9",
+    "platform": "win32"
+  }
+}
